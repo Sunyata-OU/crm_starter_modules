@@ -1,0 +1,48 @@
+site_name: "CRM Starter Modules Documentation"
+site_description: "Official module suite for CRM Starter: PostgreSQL provider, Companies, People, Todo Kanban, Sales Deals Pipeline, Activities, and Document attachments."
+site_url: "https://github.com/Sunyata-OU/crm_starter_modules"
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Overview: index.md
+  - Modules Reference: modules.md
+  - Kanban & Views: kanban.md
+  - PostgreSQL Setup: postgres.md
+  - Customization & Deletion: customization.md
