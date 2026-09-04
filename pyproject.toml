@@ -1,7 +1,7 @@
 [project]
 name = "crm-starter-modules"
-version = "0.1.0"
-description = "Starter modules repository for CRM Starter: Postgres provider, Companies, People, Todo Kanban, Sales Deals, Activities, and Document attachments."
+version = "0.2.0"
+description = "Starter modules suite for CRM Starter: Postgres provider, Companies, People, Todo Kanban, Sales Deals, Activities, Documents, Leads, Products & Quotes, Support Tickets, Contracts, Marketing Campaigns, and Time Tracking."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
@@ -14,6 +14,12 @@ todo_actions = "starter_module.todo_actions"
 sales_deals = "starter_module.sales_deals"
 crm_activities = "starter_module.crm_activities"
 documents_attachments = "starter_module.documents_attachments"
+lead_management = "starter_module.lead_management"
+products_quotes = "starter_module.products_quotes"
+customer_support = "starter_module.customer_support"
+contracts_subscriptions = "starter_module.contracts_subscriptions"
+marketing_campaigns = "starter_module.marketing_campaigns"
+time_tracking = "starter_module.time_tracking"
 
 [build-system]
 requires = ["hatchling"]
