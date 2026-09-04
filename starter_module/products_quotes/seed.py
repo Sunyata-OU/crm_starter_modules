@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from datetime import date, timedelta
+
 from app.schema import get_engine
+
 from starter_module.products_quotes.schema import products, quotes
 
 today = date.today()

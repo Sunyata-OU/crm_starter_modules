@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Column, Integer, String, Table, Text
 from app.schema import metadata, timestamps
+from sqlalchemy import Column, Integer, String, Table, Text
 
 companies = Table(
     "companies",

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 from app.schema import metadata, timestamps
+from sqlalchemy import Column, ForeignKey, Integer, String, Table, Text
 
 support_tickets = Table(
     "support_tickets",

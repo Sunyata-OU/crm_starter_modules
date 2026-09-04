@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.schema import get_engine
+
 from starter_module.customer_support.schema import support_tickets
 
 SAMPLE_TICKETS = [

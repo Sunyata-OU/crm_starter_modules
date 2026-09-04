@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.schema import get_engine
+
 from starter_module.crm_companies.schema import companies
 
 SAMPLE_COMPANIES = [

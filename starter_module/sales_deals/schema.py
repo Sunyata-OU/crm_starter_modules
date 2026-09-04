@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Table, Text
 from app.schema import Instant, metadata, timestamps
+from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, Table, Text
 
 deals = Table(
     "sales_deals",

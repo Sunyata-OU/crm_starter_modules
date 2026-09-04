@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.schema import get_engine
+
 from starter_module.marketing_campaigns.schema import marketing_campaigns
 
 SAMPLE_CAMPAIGNS = [

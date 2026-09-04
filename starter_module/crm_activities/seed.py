@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from app.core.clock import utcnow
 from app.schema import get_engine
+
 from starter_module.crm_activities.schema import activities
 
 now = utcnow()

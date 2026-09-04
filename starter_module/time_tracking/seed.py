@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from datetime import date
+
 from app.schema import get_engine
+
 from starter_module.time_tracking.schema import time_logs
 
 today = date.today()
