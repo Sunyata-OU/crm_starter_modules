@@ -12,7 +12,7 @@ uv pip install -e /path/to/crm_starter_modules
 
 ### 2. Enable Active Modules
 ```bash
-CRM_MODULES=db_postgres,crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
+CRM_MODULES=db_postgres,db_redis,crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
 ```
 
 ---
@@ -22,6 +22,7 @@ CRM_MODULES=db_postgres,crm_companies,crm_people,todo_actions,sales_deals,crm_ac
 | Module Name | Key Feature | Views Included |
 | --- | --- | --- |
 | **`db_postgres`** | PostgreSQL DB Provider | Connection Provider |
+| **`db_redis`** | [Redis provider](redis.md), for the job queue or any resource | Connection Provider |
 | **`crm_companies`** | Company Master Data | List, Form, Detail, Timeline |
 | **`crm_people`** | Personnel & Contacts | List, Form, Detail, Timeline |
 | **`todo_actions`** | Action Items & Task Kanban | List, **Kanban Board**, Form, Detail |

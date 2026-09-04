@@ -36,8 +36,8 @@ A comprehensive modular extension package for **CRM Starter** containing Postgre
 
 2. **Enable desired modules via `CRM_MODULES` environment variable**:
    ```bash
-   # Enable all 13 starter modules:
-   CRM_MODULES=db_postgres,crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
+   # Enable all 14 starter modules:
+   CRM_MODULES=db_postgres,db_redis,crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
    ```
 
 3. **Run database migrations and seed data**:

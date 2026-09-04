@@ -135,3 +135,120 @@ This guide details the internal structure, field definitions, relationships, and
   - `company_id` (RelationField -> `companies`)
   - `deal_id` (RelationField -> `sales_deals`)
   - `owner` (TextField)
+
+---
+
+## 8. `lead_management` (Leads & Qualification)
+
+- **Resource**: `leads` — table `leads`
+- **Menu**: Sales
+- **Scoping**: `DbPolicy(owner_field="owner")`, so a rep sees their own leads
+- **Fields**:
+  - `name` (TextField, required, searchable, inline editable)
+  - `email` (EmailField, required, searchable)
+  - `company_name` (TextField, searchable) — a name, not a relation: an
+    unqualified lead has no company record yet
+  - `phone` (PhoneField, searchable)
+  - `source` (SelectField, filterable)
+  - `status` (StatusField, filterable, inline editable)
+  - `owner` (TextField, filterable)
+  - `notes` (TextAreaField)
+- **Views**: List, **Kanban Board** (by status), Form, Detail
+- **Action**: `convert_lead` — promotes a qualified lead into a company and a
+  contact. Hidden once the lead is disqualified.
+
+---
+
+## 9. `products_quotes` (Products & Quotations)
+
+Two resources, because a catalogue and a quotation have different lifetimes.
+
+- **Resource**: `products` — table `products`
+  - `sku` (TextField, required, searchable), `name` (TextField, required,
+    searchable), `unit_price` (CurrencyField), `category` (SelectField:
+    Software, Services, Hardware, Maintenance), `is_active` (BooleanField),
+    `description` (TextAreaField)
+  - **Views**: List, Form, Detail
+- **Resource**: `quotes` — table **`sales_quotes`**
+  - `quote_number`, `title` (TextField, required, searchable), `status`
+    (StatusField, filterable), `total_amount` (CurrencyField), `valid_until`
+    (DateField, filterable), `company_id` (RelationField -> `companies`),
+    `deal_id` (RelationField -> `sales_deals`), `owner`, `notes`
+  - **Scoping**: `DbPolicy(owner_field="owner")`
+  - **Views**: List, Form, Detail
+  - **Actions**: `send_quote` (draft only), `accept_quote` (draft or sent) —
+    both gated on the status the transition makes sense from, so an action is
+    never offered where it would not apply
+
+---
+
+## 10. `customer_support` (Helpdesk Tickets)
+
+- **Resource**: `support_tickets` — table `support_tickets`
+- **Menu**: Support
+- **Scoping**: `DbPolicy(owner_field="assigned_to")` — the agent, not the
+  reporter, which is what makes "my queue" mean the right thing
+- **Fields**:
+  - `ticket_number` (TextField, required, searchable)
+  - `subject` (TextField, required, searchable)
+  - `status` (StatusField, filterable, inline editable)
+  - `priority` (StatusField, filterable, inline editable)
+  - `category` (SelectField, filterable)
+  - `company_id` (RelationField -> `companies`)
+  - `person_id` (RelationField -> `people`)
+  - `assigned_to` (TextField, filterable) / `owner` (TextField, the reporter)
+  - `description` (TextAreaField)
+- **Views**: List, **Ticket Kanban Board**, Form, Detail
+- **Actions**: `resolve_ticket` (open or in progress), `close_ticket` (anything
+  not already closed)
+
+---
+
+## 11. `contracts_subscriptions` (Contracts & Recurring Revenue)
+
+- **Resource**: `contracts` — table `contracts`
+- **Menu**: Sales
+- **Fields**:
+  - `contract_number`, `title` (TextField, required, searchable)
+  - `status` (StatusField, filterable, inline editable)
+  - `contract_type` (SelectField, filterable)
+  - `mrr` (CurrencyField) — monthly recurring revenue
+  - `start_date` / `end_date` (DateField, filterable)
+  - `auto_renew` (BooleanField)
+  - `company_id` (RelationField -> `companies`), `deal_id` (RelationField ->
+    `sales_deals`)
+  - `owner` (TextField, filterable), `notes` (TextAreaField)
+- **Views**: List, Form, Detail
+- **Action**: `renew_contract` — offered on active and pending-renewal
+  contracts
+
+---
+
+## 12. `marketing_campaigns` (Campaigns & ROI)
+
+- **Resource**: `marketing_campaigns` — table `marketing_campaigns`
+- **Menu**: Workspace
+- **Fields**:
+  - `name` (TextField, required, searchable)
+  - `type` (SelectField, filterable) / `status` (StatusField, filterable)
+  - `budget`, `actual_cost`, `expected_revenue` (CurrencyField) — the three
+    numbers the ROI chart is built from
+  - `owner` (TextField, filterable), `notes` (TextAreaField)
+- **Views**: List, **ROI Chart**, Form, Detail
+
+---
+
+## 13. `time_tracking` (Billable Hours)
+
+- **Resource**: `time_tracking` — table **`time_logs`**
+- **Menu**: Workspace
+- **Fields**:
+  - `description` (TextField, required, searchable)
+  - `hours` (TextField, required) / `hourly_rate` (CurrencyField)
+  - `billable` (BooleanField, filterable)
+  - `log_date` (DateField, filterable)
+  - `company_id` (RelationField -> `companies`), `deal_id` (RelationField ->
+    `sales_deals`)
+  - `logged_by` (TextField, filterable)
+- **Views**: List, **Hours Chart**, Form, Detail
+
