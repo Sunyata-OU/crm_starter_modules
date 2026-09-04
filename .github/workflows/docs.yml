@@ -34,8 +34,9 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install dependencies
+      - name: Create virtual environment & Install dependencies
         run: |
+          uv venv
           uv pip install hatchling mkdocs mkdocs-material
           uv pip install -e .
 
