@@ -1,0 +1,23 @@
+[project]
+name = "crm-starter-modules"
+version = "0.1.0"
+description = "Starter modules repository for CRM Starter: Postgres provider, Companies, People, Todo Kanban, Sales Deals, Activities, and Document attachments."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.entry-points."crm.modules"]
+db_postgres = "starter_module.db_postgres"
+crm_companies = "starter_module.crm_companies"
+crm_people = "starter_module.crm_people"
+todo_actions = "starter_module.todo_actions"
+sales_deals = "starter_module.sales_deals"
+crm_activities = "starter_module.crm_activities"
+documents_attachments = "starter_module.documents_attachments"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["starter_module"]
