@@ -18,6 +18,34 @@ This guide details the internal structure, field definitions, relationships, and
 
 ---
 
+## 1b. `db_redis` (Redis Provider)
+
+- **Purpose**: Adds a `redis` connection type and provider. Built for the
+  background job queue, but usable by any resource.
+- **Provider String**: `redis.<name>#<collection>`
+- **Install**: `uv pip install 'crm-starter-modules[redis]'`
+- **Configuration**:
+  ```yaml
+  connections:
+    redis.jobs:
+      type: redis
+      url: ${CRM_REDIS_JOBS_URL:-redis://localhost:6379/1}
+      prefix: crm:jobs
+      indexed: [status, kind, key, claimed_by]
+      scored: [run_at, priority, created_at, finished_at]
+  ```
+  ```bash
+  CRM_MODULES=db_redis CRM_JOBS_CONNECTION=redis.jobs uv run crm worker
+  ```
+- **How queries work**: indexes narrow the candidate set, Python decides the
+  answer — so an index that does not exist costs a wider read, never a wrong
+  row. Bounded by `max_rows`, and refused rather than truncated beyond it.
+- **`update_if`** is a real compare-and-set on `WATCH`/`MULTI`, which is what
+  lets several workers share a queue safely.
+- **Durability**: weaker than a database. See [the guide](redis.md#durability-read-this-before-moving-the-queue).
+
+---
+
 ## 2. `crm_companies` (Companies Master Data)
 
 - **Resource**: `companies`

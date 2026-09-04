@@ -15,6 +15,21 @@ jobs:
       matrix:
         python-version: ["3.12", "3.13"]
 
+    # The db_redis tests run against a real server, not a fake: what the
+    # provider relies on is WATCH/MULTI aborting a transaction when the key
+    # moved, and a fake that got that subtly wrong would pass here while the
+    # thing it proves quietly failed in production.
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,11 +47,18 @@ jobs:
       - name: Create virtual environment & Install dependencies
         run: |
           uv venv
-          uv pip install hatchling ruff mypy mkdocs mkdocs-material
-          uv pip install -e .
+          uv pip install hatchling ruff mypy mkdocs mkdocs-material pytest pytest-asyncio
+          # crm_starter itself, which the modules import from.
+          uv pip install 'crm-starter @ git+https://github.com/Sunyata-OU/crm_starter@main'
+          uv pip install -e '.[redis]'
 
       - name: Run Ruff Linter
         run: uv run ruff check . || true
+
+      - name: Run tests
+        env:
+          CRM_TEST_REDIS_URL: redis://localhost:6379/15
+        run: uv run pytest tests -q
 
       - name: Build MkDocs Documentation Site
         run: uv run mkdocs build
