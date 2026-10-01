@@ -49,7 +49,7 @@ Install the package (`uv pip install -e /path/to/crm_starter_modules`), then:
 * **Sign-in accounts** (`keycloak_users`): the holders of the staff roles,
   read-only. Somebody holding two of the listed roles appears once per role.
   The roster is also declared as the application's
-  staff directory (`Registry.staff_directory`, see the framework's `notes-and-tasks.md`), so `@mentions` and unassigned-task
+  staff directory (`Registry.staff_directory`, see the framework's [`notes-and-tasks.md`](https://github.com/Sunyata-OU/crm_starter/blob/main/docs/notes-and-tasks.md)), so `@mentions` and unassigned-task
   alerts resolve against it.
 * **Impersonation**: an *Impersonate* action and an `impersonation_log` of who
   signed in as whom. `starter_module.keycloak_accounts.impersonate_action(resolve)`

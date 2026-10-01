@@ -53,7 +53,7 @@ future contributor to get wrong in that direction.
 ## Reference
 
 Every ticket has a reference — `T-1042` — filled in by
-[`SequencingProvider`](providers.md) immediately after the insert that reveals
+[`SequencingProvider`](https://github.com/Sunyata-OU/crm_starter/blob/main/docs/providers.md) immediately after the insert that reveals
 the primary key it is derived from (`app.providers.sequence`). It is what a
 reply's subject is tagged with (`[T-1042] Refund for order 88`), because a
 primary key is not a thing a person reads over the phone with confidence they
@@ -117,7 +117,7 @@ clock for "ageing" starts being worth mentioning again only after the next
 reset (a reopen, in practice).
 
 Run it beside `crm notify-due` and `crm tasks-sweep`, from cron, a scheduler,
-or the `notify` profile in `compose.yaml`.
+or the `notify` profile in the framework's `compose.yaml`.
 
 ## The ingest seam
 
