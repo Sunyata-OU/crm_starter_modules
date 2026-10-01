@@ -7,8 +7,8 @@ This guide explains how to enable, disable, customize, or physically remove modu
 You can select active modules dynamically at runtime using the `CRM_MODULES` environment variable.
 
 ```bash
-# Enable only Companies and Todo Actions with Kanban
-CRM_MODULES=crm_companies,todo_actions uv run crm dev
+# Enable only Companies and Deals
+CRM_MODULES=crm_companies,sales_deals uv run crm dev
 ```
 
 ### Why optional modules stay clean:
@@ -31,7 +31,6 @@ If your project only needs a subset of these modules and you want to remove code
    db_postgres = "starter_module.db_postgres"
    crm_companies = "starter_module.crm_companies"
    crm_people = "starter_module.crm_people"
-   todo_actions = "starter_module.todo_actions"
    # sales_deals entry deleted
    ```
 

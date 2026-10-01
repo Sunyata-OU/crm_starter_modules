@@ -25,12 +25,7 @@ BoardView(
 
 ## 🚀 Shipped Kanban Boards
 
-### 1. Todo Actions Kanban (`todo_actions`)
-- **Group By**: `status` (`pending`, `in_progress`, `completed`, `cancelled`)
-- **Card Content**: Displays task title, associated company name, priority badge (`urgent`, `high`, `medium`, `low`), due date, and assigned user.
-- **Interactions**: Drag & drop cards between columns updates `status` automatically in the backend.
-
-### 2. Sales Pipeline Kanban (`sales_deals`)
+### 1. Sales Pipeline Kanban (`sales_deals`)
 - **Group By**: `stage` (`qualifying`, `proposal`, `negotiation`, `won`, `lost`)
 - **Card Content**: Displays deal title, company name, deal amount, and win probability percentage.
 - **Column Aggregations**: Calculates column total revenue (`sum_field="amount"`).

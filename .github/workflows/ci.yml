@@ -48,8 +48,11 @@ jobs:
         run: |
           uv venv
           uv pip install hatchling ruff mypy mkdocs mkdocs-material pytest pytest-asyncio
-          # crm_starter itself, which the modules import from.
-          uv pip install 'crm-starter @ git+https://github.com/Sunyata-OU/crm_starter@main'
+          # crm_starter itself, which the modules import from. A checkout rather
+          # than a package: its migrations/ and alembic.ini are not installed,
+          # and the migration tests run `crm migrate` for real.
+          git clone --depth 1 https://github.com/Sunyata-OU/crm_starter.git ../crm_starter
+          uv pip install -e ../crm_starter
           uv pip install -e '.[redis]'
 
       - name: Run Ruff Linter
