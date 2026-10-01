@@ -42,8 +42,8 @@ When you enable modules in `CRM_MODULES`, Alembic automatically reflects all mod
 
 ```bash
 # Generate a migration script for active module tables
-CRM_MODULES=crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments uv run crm make-migration "add_starter_modules"
+CRM_MODULES=crm_companies,crm_people,sales_deals,crm_activities,documents_attachments uv run crm make-migration "add_starter_modules"
 
 # Apply migrations
-CRM_MODULES=crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments uv run crm migrate
+CRM_MODULES=crm_companies,crm_people,sales_deals,crm_activities,documents_attachments uv run crm migrate
 ```

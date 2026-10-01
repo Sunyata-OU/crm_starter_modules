@@ -1,6 +1,9 @@
 # CRM Starter Modules (`starter-module`)
 
-A comprehensive modular extension package for **CRM Starter** containing PostgreSQL and Redis backend support, Companies, People/Contacts, Todo Actions with Kanban, Sales Deals Pipeline with Kanban, Activity Logs, Document Storage, Lead Management, Products & Quotes, Support Tickets with Kanban, Contracts & Subscriptions, Marketing Campaigns, and Time Tracking.
+A comprehensive modular extension package for **CRM Starter** containing PostgreSQL and Redis backend support, Companies, People/Contacts, Sales Deals Pipeline with Kanban, Activity Logs, Document Storage, Lead Management, Products & Quotes, a Helpdesk, a Keycloak staff roster with impersonation, Contracts & Subscriptions, Marketing Campaigns, and Time Tracking.
+
+> Tasks are no longer a module here: `core_tasks` ships with the framework and
+> replaces `todo_actions`. The old `customer_support` is replaced by `helpdesk`.
 
 ## 📦 Shipped Modules Suite
 
@@ -10,13 +13,13 @@ A comprehensive modular extension package for **CRM Starter** containing Postgre
 | `db_redis` | A `redis` connection type and provider — for the [job queue](docs/redis.md) or any resource | `db_redis` |
 | `crm_companies` | Company & Organization master data | `crm_companies` |
 | `crm_people` | Individual contacts and personnel linked to companies | `crm_people` |
-| `todo_actions` | Action items with priority, due dates, and **Kanban Board** | `todo_actions` |
 | `sales_deals` | Sales opportunity pipeline with stages and **Pipeline Kanban** | `sales_deals` |
 | `crm_activities` | Call, email, meeting, and note logging tied to records | `crm_activities` |
 | `documents_attachments` | File upload tracking and document storage | `documents_attachments` |
 | `lead_management` | Inbound lead qualification and **Lead Conversion Action** | `lead_management` |
 | `products_quotes` | Product catalog SKUs and quotation status pipeline | `products_quotes` |
-| `customer_support` | Customer support helpdesk and **Helpdesk Ticket Kanban** | `customer_support` |
+| `helpdesk` | Support tickets: a board, a customer-visible thread per ticket, a sweep, and the seam an inbound-mail branch plugs into | `helpdesk` |
+| `keycloak_accounts` | The staff roster from a Keycloak realm, and signing in as an account with a log of who did | `keycloak_accounts` |
 | `contracts_subscriptions` | SaaS recurring revenue (MRR), SLA contracts, and renewal tracking | `contracts_subscriptions` |
 | `marketing_campaigns` | Campaign budgeting and **Revenue ROI Chart View** | `marketing_campaigns` |
 | `time_tracking` | Client billable hours and timesheet logging | `time_tracking` |
@@ -37,13 +40,13 @@ A comprehensive modular extension package for **CRM Starter** containing Postgre
 2. **Enable desired modules via `CRM_MODULES` environment variable**:
    ```bash
    # Enable all 14 starter modules:
-   CRM_MODULES=db_postgres,db_redis,crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
+   CRM_MODULES=db_postgres,db_redis,crm_companies,crm_people,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,helpdesk,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm dev
    ```
 
 3. **Run database migrations and seed data**:
    ```bash
-   CRM_MODULES=crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm migrate
-   CRM_MODULES=crm_companies,crm_people,todo_actions,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,customer_support,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm seed
+   CRM_MODULES=crm_companies,crm_people,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,helpdesk,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm migrate
+   CRM_MODULES=crm_companies,crm_people,sales_deals,crm_activities,documents_attachments,lead_management,products_quotes,helpdesk,contracts_subscriptions,marketing_campaigns,time_tracking uv run crm seed
    ```
 
 ---
@@ -55,7 +58,7 @@ Every module in this repository sets `"optional": True` in its `MANIFEST`. Unsel
 Simply pass the modules you want in `CRM_MODULES`:
 ```bash
 # Example: Only load Companies, Deals, and Customer Support
-CRM_MODULES=crm_companies,sales_deals,customer_support uv run crm dev
+CRM_MODULES=crm_companies,sales_deals,helpdesk uv run crm dev
 ```
 
 ---

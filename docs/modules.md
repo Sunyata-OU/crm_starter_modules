@@ -76,23 +76,6 @@ This guide details the internal structure, field definitions, relationships, and
 
 ---
 
-## 4. `todo_actions` (Todo Actions & Kanban)
-
-- **Resource**: `todo_actions`
-- **Fields**:
-  - `title` (TextField, required)
-  - `status` (StatusField: `pending`, `in_progress`, `completed`, `cancelled`)
-  - `priority` (StatusField: `low`, `medium`, `high`, `urgent`)
-  - `due_date` (DateField)
-  - `company_id` (RelationField -> `companies`)
-  - `person_id` (RelationField -> `people`)
-  - `assigned_to` (TextField)
-  - `completed_at` (DateTimeField)
-- **Views**: List View, **Kanban BoardView** (grouped by `status`).
-- **Actions**: `mark_completed` (stamps `status="completed"` and `completed_at`).
-
----
-
 ## 5. `sales_deals` (Sales Pipeline & Deals)
 
 - **Resource**: `sales_deals`
@@ -182,25 +165,10 @@ Two resources, because a catalogue and a quotation have different lifetimes.
 
 ---
 
-## 10. `customer_support` (Helpdesk Tickets)
+## 10. `helpdesk` and `keycloak_accounts`
 
-- **Resource**: `support_tickets` — table `support_tickets`
-- **Menu**: Support
-- **Scoping**: `DbPolicy(owner_field="assigned_to")` — the agent, not the
-  reporter, which is what makes "my queue" mean the right thing
-- **Fields**:
-  - `ticket_number` (TextField, required, searchable)
-  - `subject` (TextField, required, searchable)
-  - `status` (StatusField, filterable, inline editable)
-  - `priority` (StatusField, filterable, inline editable)
-  - `category` (SelectField, filterable)
-  - `company_id` (RelationField -> `companies`)
-  - `person_id` (RelationField -> `people`)
-  - `assigned_to` (TextField, filterable) / `owner` (TextField, the reporter)
-  - `description` (TextAreaField)
-- **Views**: List, **Ticket Kanban Board**, Form, Detail
-- **Actions**: `resolve_ticket` (open or in progress), `close_ticket` (anything
-  not already closed)
+These two ship with their own tables, migrations, templates and settings; see
+[`helpdesk.md`](helpdesk.md) and [`keycloak.md`](keycloak.md).
 
 ---
 

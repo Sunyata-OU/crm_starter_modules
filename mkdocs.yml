@@ -1,5 +1,5 @@
 site_name: "CRM Starter Modules Documentation"
-site_description: "Official module suite for CRM Starter: PostgreSQL and Redis providers, Companies, People, Todo Kanban, Sales Deals Pipeline, Activities, and Document attachments."
+site_description: "Official module suite for CRM Starter: PostgreSQL and Redis providers, Companies, People, a Helpdesk, Keycloak accounts, Sales Deals Pipeline, Activities, and Document attachments."
 site_url: "https://github.com/Sunyata-OU/crm_starter_modules"
 
 theme:
@@ -44,6 +44,8 @@ nav:
   - Overview: index.md
   - Modules Reference: modules.md
   - Kanban & Views: kanban.md
+  - Helpdesk: helpdesk.md
+  - Keycloak accounts: keycloak.md
   - PostgreSQL Setup: postgres.md
   - Redis Provider: redis.md
   - Customization & Deletion: customization.md
