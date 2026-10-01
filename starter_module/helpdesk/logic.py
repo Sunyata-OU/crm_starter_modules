@@ -6,7 +6,7 @@ built so that a second branch can add inbound mail without touching any of it,
 by calling into the handful of functions below.
 
 That is the whole reason this module exists as something other than a private
-helper inside ``modules/core_helpdesk``: reference generation, subject-tag
+helper inside the ``helpdesk`` module: reference generation, subject-tag
 parsing, deciding which ticket an inbound message threads onto, and dedupe are
 all *decisions*, not I/O, and a decision is worth being able to test and reuse
 without a mail server. The ingest branch is expected to call:
