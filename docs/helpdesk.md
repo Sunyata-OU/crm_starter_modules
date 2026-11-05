@@ -11,6 +11,15 @@
 | `CRM_HELPDESK_WATCHERS` | — | Addresses told about a new ticket assigned to nobody, and one ageing while assigned. Empty means the sweep says nothing about either. |
 | `CRM_HELPDESK_STALE_HOURS` | `48.0` | How long an open ticket may go without a fresh sweep notification before `crm helpdesk-sweep` mentions it again. |
 | `CRM_HELPDESK_MAIL_DOMAIN` | `localhost` | Domain half of the Message-ID generated for outbound replies. Cosmetic, but worth setting. |
+| `CRM_HELPDESK_IMAP_HOST` | — | The support mailbox `crm helpdesk-ingest` reads, over IMAP. Empty means none is configured. Read-only: it never marks mail seen. |
+| `CRM_HELPDESK_IMAP_PORT` | `993` | |
+| `CRM_HELPDESK_IMAP_USERNAME` | — | |
+| `CRM_HELPDESK_IMAP_PASSWORD` | — | Secret: supply it from the environment or a secret store, never a committed file. |
+| `CRM_HELPDESK_IMAP_SSL` | `true` | |
+| `CRM_HELPDESK_IMAP_FOLDER` | `INBOX` | |
+| `CRM_HELPDESK_INGEST_DAYS` | `7` | How far back each run looks. Filed messages are skipped by Message-ID, so this only needs to cover the longest the job could be down. |
+| `CRM_HELPDESK_INGEST_LIMIT` | `100` | At most this many new messages are filed per run; the rest wait for the next. |
+| `CRM_HELPDESK_IGNORE_SENDERS` | — | Comma-separated senders never filed, besides `CRM_SMTP_SENDER`. |
 
 `helpdesk` is support tickets: a board, a thread per ticket, and a sweep —
 a small core helpdesk. Enable it like any other module:
@@ -118,6 +127,37 @@ reset (a reopen, in practice).
 
 Run it beside `crm notify-due` and `crm tasks-sweep`, from cron, a scheduler,
 or the `notify` profile in the framework's `compose.yaml`.
+
+## Reading the mailbox
+
+`crm helpdesk-ingest` files the support mailbox as tickets and replies. Set
+`CRM_HELPDESK_IMAP_HOST`, `_USERNAME` and `_PASSWORD`, test them with
+`crm helpdesk-ingest --check`, then run it from cron or a scheduler, like the
+sweep.
+
+* **Read-only.** The folder is opened read-only and messages are fetched with
+  `BODY.PEEK`, so reading never marks anything seen. It can run beside any
+  other reader of the same inbox (an old Odoo fetchmail, a person in a mail
+  client) without changing what they see — but note that two *systems* filing
+  the same inbox will each file everything, so switch the other one off.
+* **Stateless.** Each run looks at the last `CRM_HELPDESK_INGEST_DAYS` days and
+  skips every message whose Message-ID is already in `ticket_messages`, so
+  running it twice, or after a crash, files nothing twice. A message with no
+  Message-ID gets a stable one made from its bytes.
+* **Where a message goes.** A `[T-1042]` subject tag, or failing that an
+  `In-Reply-To`/`References` Message-ID we stored, puts it on that ticket — and
+  brings a resolved, closed or waiting ticket back to `open`. Anything else
+  opens a new ticket with `source=email`.
+* **Robots are skipped, not answered.** Bounces, out-of-office replies, list
+  mail (`Auto-Submitted`, `Precedence`, `List-Id`, `multipart/report`,
+  `noreply@`…) and `CRM_SMTP_SENDER` and `CRM_HELPDESK_IGNORE_SENDERS` are never
+  filed, so two autoresponders cannot keep each other busy.
+* **Text only.** HTML is reduced to its text, attachments are counted ("2
+  attachment(s) not stored") and dropped, bodies are capped at 20,000 characters.
+
+The decisions are `starter_module.helpdesk.logic`'s (the seam below); the
+reading is `starter_module.helpdesk.mailbox`; the loop is
+`starter_module.helpdesk.ingest`.
 
 ## The ingest seam
 
