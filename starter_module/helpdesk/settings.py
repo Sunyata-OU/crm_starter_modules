@@ -36,7 +36,26 @@ class HelpdeskSettings(BaseSettings):
     #: even when delivery worked perfectly.
     mail_domain: str = "localhost"
 
-    @field_validator("watchers", mode="before")
+    #: The support mailbox `crm helpdesk-ingest` reads, over IMAP. Read-only: it
+    #: opens the folder read-only and never marks anything seen. An empty host
+    #: means no mailbox is configured, and the command says so rather than guess.
+    imap_host: str = ""
+    imap_port: int = 993
+    imap_username: str = ""
+    imap_password: str = ""
+    imap_ssl: bool = True
+    imap_folder: str = "INBOX"
+    #: How far back each run looks. Messages already filed are skipped by
+    #: Message-ID, so this only needs to cover the longest the job could be down.
+    ingest_days: int = 7
+    #: At most this many new messages are filed per run; the rest wait for the
+    #: next one, so a backlog cannot make one run hold the database for ever.
+    ingest_limit: int = 100
+    #: Senders never filed, besides the framework's `CRM_SMTP_SENDER`: our own
+    #: addresses, a relay that copies us in.
+    ignore_senders: Annotated[list[str], NoDecode] = []
+
+    @field_validator("watchers", "ignore_senders", mode="before")
     @classmethod
     def _split_csv(cls, value):
         """Accept a comma-separated string, since env vars cannot hold lists."""

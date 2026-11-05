@@ -381,7 +381,7 @@ async def _last_message(messages: Resource, ticket_id: Any, ctx: Ctx):
 
 
 def register_cli(app) -> None:
-    """Add ``crm helpdesk-sweep``."""
+    """Add ``crm helpdesk-sweep`` and ``crm helpdesk-ingest``."""
     import asyncio
     from datetime import timedelta
 
@@ -434,3 +434,72 @@ def register_cli(app) -> None:
             f"Told {counts['assigned']} about a hand-over, {counts['unassigned']} about a new "
             f"unassigned ticket, and {counts['stale']} about one ageing quietly."
         )
+
+    @app.command("helpdesk-ingest")
+    def helpdesk_ingest(
+        days: int | None = typer.Option(
+            None, help="How many days back to look. Defaults to CRM_HELPDESK_INGEST_DAYS."
+        ),
+        check: bool = typer.Option(
+            False, "--check", help="Only log in and open the folder, to test the settings."
+        ),
+    ) -> None:
+        """File the support mailbox's mail as tickets and replies.
+
+        Run from cron or a scheduler. Like the sweep it keeps no state of its own:
+        a message already stored (by Message-ID) is skipped, so running it twice,
+        or after a crash, files nothing twice. It reads the mailbox read-only and
+        never marks mail seen, so it can run beside anything else that reads the
+        same inbox.
+        """
+        from app.main import build_registry
+        from app.settings import get_settings as framework_settings
+
+        from . import ingest as ingest_mod
+        from .mailbox import ImapMailbox
+
+        framework = framework_settings()
+        mine = get_settings()
+        if not mine.imap_host:
+            typer.secho(
+                "No mailbox is configured: set CRM_HELPDESK_IMAP_HOST (and username, password).",
+                err=True, fg="red",
+            )
+            raise typer.Exit(1)
+        mailbox = ImapMailbox(
+            mine.imap_host, port=mine.imap_port, username=mine.imap_username,
+            password=mine.imap_password, ssl=mine.imap_ssl, folder=mine.imap_folder,
+        )
+
+        if check:
+            try:
+                asyncio.run(mailbox.check())
+            except Exception as exc:  # noqa: BLE001 -- the reason is what the operator needs
+                typer.secho(f"The mailbox could not be opened: {exc}", err=True, fg="red")
+                raise typer.Exit(1) from exc
+            typer.echo(f"Opened {mine.imap_folder} on {mine.imap_host}.")
+            return
+
+        registry = build_registry(framework)
+        ignore = [*mine.ignore_senders, framework.smtp_sender]
+
+        async def go():
+            await registry.bind()
+            if not registry.has_resource("tickets"):
+                typer.secho("No 'tickets' resource is registered.", err=True, fg="red")
+                raise typer.Exit(1)
+            try:
+                return await ingest_mod.ingest(
+                    registry, mailbox,
+                    since_days=days if days is not None else mine.ingest_days,
+                    ignore_senders=ignore, limit=mine.ingest_limit,
+                )
+            finally:
+                await registry.close()
+
+        try:
+            counts = asyncio.run(go())
+        except OSError as exc:
+            typer.secho(f"The mailbox could not be read: {exc}", err=True, fg="red")
+            raise typer.Exit(1) from exc
+        typer.echo(ingest_mod.describe(counts))
